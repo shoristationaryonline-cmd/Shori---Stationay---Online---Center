@@ -331,7 +331,7 @@ async function loadJobs() {
     showJobs(
       jobs,
       jobContainer,
-      "All"
+      "All" 
     );
 
 
