@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Job Details | SHORI STATIONARY AND ONLINE CENTER NARHARPUR</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .job-details {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .job-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.10);
+    }
+
+    .job-card h1 {
+      margin-bottom: 15px;
+      color: #102a43;
+      font-size: 30px;
+    }
+
+    .job-date {
+      color: #777;
+      margin-bottom: 25px;
+    }
+
+    .job-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .job-table tr {
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .job-table td {
+      padding: 13px 8px;
+      vertical-align: top;
+    }
+
+    .job-table td:first-child {
+      width: 35%;
+      font-weight: bold;
+      color: #17324d;
+    }
+
+    .job-description {
+      margin-top: 25px;
+      line-height: 1.7;
+    }
+
+    .job-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .job-buttons a {
+      display: inline-block;
+      padding: 13px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .notification-btn {
+      background: #17324d;
+      color: white;
+    }
+
+    .apply-btn {
+      background: #f28c00;
+      color: white;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 20px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #17324d;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    .error {
+      text-align: center;
+      padding: 40px 20px;
+      color: #c62828;
+    }
+
+    @media (max-width: 600px) {
+      .job-details {
+        margin: 20px auto;
+        padding: 12px;
+      }
+
+      .job-card {
+        padding: 18px;
+      }
+
+      .job-card h1 {
+        font-size: 24px;
+      }
+
+      .job-table td:first-child {
+        width: 40%;
+      }
+
+      .job-table td {
+        font-size: 14px;
+      }
+
+      .job-buttons a {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="job-details">
+
+    <a href="index.html#updates" class="back-btn">
+      ← वापस Latest Jobs पर जाएँ
+    </a>
+
+    <div id="jobContent" class="loading">
+      भर्ती की जानकारी लोड हो रही है...
+    </div>
+
+  </div>
+
+  <script>
+    async function loadJobDetails() {
+
+      const container = document.getElementById("jobContent");
+
+      const params = new URLSearchParams(window.location.search);
+      const jobId = params.get("id");
+
+      if (!jobId) {
+        container.innerHTML = `
+          <div class="error">
+            <h2>भर्ती की जानकारी नहीं मिली</h2>
+            <p>कृपया Latest Jobs से भर्ती चुनें।</p>
+          </div>
+        `;
+        return;
+      }
+
+      try {
+
+        const response = await fetch("jobs.json");
+
+        if (!response.ok) {
+          throw new Error("jobs.json नहीं मिला");
+        }
+
+        const jobs = await response.json();
+
+        const job = jobs.find(item => item.id === jobId);
+
+        if (!job) {
+          container.innerHTML = `
+            <div class="error">
+              <h2>भर्ती नहीं मिली</h2>
+              <p>इस भर्ती की जानकारी उपलब्ध नहीं है।</p>
+            </div>
+          `;
+          return;
+        }
+
+        document.title =
+          job.title + " | SHORI STATIONARY AND ONLINE CENTER";
+
+        container.className = "";
+
+        container.innerHTML = `
+
+          <div class="job-card">
+
+            <h1>${job.title}</h1>
+
+            <div class="job-date">
+              अपडेट: ${job.date || "Latest Update"}
+            </div>
+
+            <table class="job-table">
+
+              <tr>
+                <td>विभाग</td>
+                <td>${job.department || "-"}</td>
+              </tr>
+
+              <tr>
+                <td>कुल पद</td>
+                <td>${job.posts || "-"}</td>
+              </tr>
+
+              <tr>
+                <td>पद का नाम</td>
+                <td>${job.postName || "-"}</td>
+              </tr>
+
+              <tr>
+                <td>शैक्षणिक योग्यता</td>
+                <td>${job.qualification || "-"}</td>
+              </tr>
+
+              <tr>
+                <td>आयु सीमा</td>
+                <td>${job.age || "-"}</td>
+              </tr>
+
+              <tr>
+                <td>वेतन / Salary</td>
+                <td>${job.salary || "-"}</td>
+              </tr>
+
+              <tr>
+                <td>आवेदन शुल्क</td>
+                <td>${job.fee || "-"}</td>
+              </tr>
+
+              <tr>
+                <td>आवेदन प्रारंभ</td>
+                <td>${job.startDate || "-"}</td>
+              </tr>
+
+              <tr>
+                <td>अंतिम तिथि</td>
+                <td>${job.lastDate || "-"}</td>
+              </tr>
+
+              <tr>
+                <td>चयन प्रक्रिया</td>
+                <td>${job.selection || "-"}</td>
+              </tr>
+
+            </table>
+
+            <div class="job-description">
+
+              <h3>📋 भर्ती की पूरी जानकारी</h3>
+
+              <p>
+                ${job.details || "अधिक जानकारी के लिए Official Notification देखें।"}
+              </p>
+
+            </div>
+
+            <div class="job-buttons">
+
+              <a
+                href="${job.notification}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="notification-btn">
+                📄 Official Notification
+              </a>
+
+              <a
+                href="${job.apply}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="apply-btn">
+                📝 Apply Online
+              </a>
+
+            </div>
+
+          </div>
+        `;
+
+      } catch (error) {
+
+        console.error(error);
+
+        container.innerHTML = `
+          <div class="error">
+            <h2>जानकारी लोड नहीं हो सकी</h2>
+            <p>कृपया कुछ देर बाद फिर प्रयास करें।</p>
+          </div>
+        `;
+      }
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      loadJobDetails
+    );
+  </script>
+
+</body>
+</html>
