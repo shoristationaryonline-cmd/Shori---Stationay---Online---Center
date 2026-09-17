@@ -40,3 +40,39 @@
     box-sizing: border-box;
   }
 }
+/* Bill Payment Buttons */
+
+.bill-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.bill-btn {
+  display: block;
+  padding: 12px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  background: #f1f5f9;
+  color: #102a43;
+  border: 1px solid #d9e2ec;
+}
+
+.bill-btn:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .bill-buttons {
+    flex-direction: column;
+  }
+
+  .bill-btn {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+}
